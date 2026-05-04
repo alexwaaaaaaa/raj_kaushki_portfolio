@@ -76,26 +76,45 @@ export function ProfileTab(): React.ReactElement {
                   type="file" 
                   accept="image/*" 
                   className="hidden" 
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      if (file.size > 2 * 1024 * 1024) {
-                        toast.error('Image is too large. Please use an image under 2MB.');
+                      if (file.size > 10 * 1024 * 1024) {
+                        toast.error('Image is too large. Please use an image under 10MB.');
                         return;
                       }
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        if (event.target?.result) {
-                          setFormData({ ...formData, avatarUrl: event.target.result as string });
+                      
+                      toast.loading('Uploading to Cloudinary...');
+                      
+                      try {
+                        const uploadFormData = new FormData();
+                        uploadFormData.append('file', file);
+                        
+                        const response = await fetch('/api/upload', {
+                          method: 'POST',
+                          body: uploadFormData,
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success && data.url) {
+                          setFormData({ ...formData, avatarUrl: data.url });
+                          toast.dismiss();
+                          toast.success('Image uploaded successfully!');
+                        } else {
+                          toast.dismiss();
+                          toast.error('Failed to upload image');
                         }
-                      };
-                      reader.readAsDataURL(file);
+                      } catch (error) {
+                        toast.dismiss();
+                        toast.error('Error uploading image');
+                      }
                     }
                   }} 
                 />
               </label>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)] mt-1">For best results, use a transparent PNG cutout under 2MB. Or paste a direct URL (Imgur, Cloudinary, etc.) if it's larger.</p>
+            <p className="text-[10px] text-[var(--text-muted)] mt-1">Upload images to Cloudinary (up to 10MB). Images are stored as URLs, not base64.</p>
             {formData.avatarUrl && (
               <div className="mt-2 w-24 h-24 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] overflow-hidden">
                 <img src={formData.avatarUrl} alt="Avatar Preview" className="w-full h-full object-contain" />
@@ -113,20 +132,39 @@ export function ProfileTab(): React.ReactElement {
                   type="file" 
                   accept="image/*" 
                   className="hidden" 
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      if (file.size > 2 * 1024 * 1024) {
-                        toast.error('Image is too large. Please use an image under 2MB.');
+                      if (file.size > 10 * 1024 * 1024) {
+                        toast.error('Image is too large. Please use an image under 10MB.');
                         return;
                       }
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        if (event.target?.result) {
-                          setFormData({ ...formData, aboutImage: event.target.result as string });
+                      
+                      toast.loading('Uploading to Cloudinary...');
+                      
+                      try {
+                        const uploadFormData = new FormData();
+                        uploadFormData.append('file', file);
+                        
+                        const response = await fetch('/api/upload', {
+                          method: 'POST',
+                          body: uploadFormData,
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success && data.url) {
+                          setFormData({ ...formData, aboutImage: data.url });
+                          toast.dismiss();
+                          toast.success('Image uploaded successfully!');
+                        } else {
+                          toast.dismiss();
+                          toast.error('Failed to upload image');
                         }
-                      };
-                      reader.readAsDataURL(file);
+                      } catch (error) {
+                        toast.dismiss();
+                        toast.error('Error uploading image');
+                      }
                     }
                   }} 
                 />
