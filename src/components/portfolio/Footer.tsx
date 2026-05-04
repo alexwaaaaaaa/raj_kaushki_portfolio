@@ -23,7 +23,7 @@ export function Footer(): React.ReactElement {
         
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <a href={`mailto:${profile.email}`} className="text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors text-sm font-medium">Email</a>
-          <a href={`https://${profile.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors text-sm font-medium">LinkedIn</a>
+          <a href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors text-sm font-medium">LinkedIn</a>
           <a href="/admin" className="text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors text-sm font-medium">Admin Login</a>
         </div>
 

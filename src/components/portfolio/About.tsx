@@ -32,7 +32,7 @@ export function About(): React.ReactElement {
     { icon: MapPin, label: profile.location },
     { icon: Mail, label: profile.email, href: `mailto:${profile.email}` },
     { icon: Phone, label: profile.phone[0], href: `tel:${profile.phone[0]}` },
-    { icon: Linkedin, label: profile.linkedin, href: `https://${profile.linkedin}` },
+    { icon: Linkedin, label: profile.linkedin, href: profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}` },
   ];
 
   return (

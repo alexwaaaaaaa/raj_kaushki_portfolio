@@ -107,7 +107,7 @@ export function Contact(): React.ReactElement {
 
             {/* Social Row */}
             <div className="pt-8 flex items-center gap-4">
-              <a href={`https://${profile.linkedin}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition-all">
+              <a href={profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition-all">
                 <Linkedin size={20} />
               </a>
               <a href={`mailto:${profile.email}`} className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[#ea4335] hover:text-white hover:border-[#ea4335] transition-all">
