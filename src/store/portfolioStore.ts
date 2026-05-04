@@ -125,7 +125,7 @@ const DEFAULT_DATA: PortfolioData = {
       title: 'Annual HR Summit 2025',
       description: 'Attended the Annual HR Summit to discuss the future of AI in recruitment.',
       date: '2025-08-15',
-      imageUrl: '/hero-bg.jpg',
+      imageUrl: '',
       location: 'New Delhi, India',
     }
   ],

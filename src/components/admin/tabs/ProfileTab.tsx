@@ -84,7 +84,7 @@ export function ProfileTab(): React.ReactElement {
                         return;
                       }
                       
-                      toast.loading('Uploading to Cloudinary...');
+                      toast.loading('Uploading image...');
                       
                       try {
                         const uploadFormData = new FormData();
@@ -114,7 +114,7 @@ export function ProfileTab(): React.ReactElement {
                 />
               </label>
             </div>
-            <p className="text-[10px] text-[var(--text-muted)] mt-1">Upload images to Cloudinary (up to 10MB). Images are stored as URLs, not base64.</p>
+            <p className="text-[10px] text-[var(--text-muted)] mt-1">Upload images up to 10MB.</p>
             {formData.avatarUrl && (
               <div className="mt-2 w-24 h-24 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-subtle)] overflow-hidden">
                 <img src={formData.avatarUrl} alt="Avatar Preview" className="w-full h-full object-contain" />
@@ -140,7 +140,7 @@ export function ProfileTab(): React.ReactElement {
                         return;
                       }
                       
-                      toast.loading('Uploading to Cloudinary...');
+                      toast.loading('Uploading image...');
                       
                       try {
                         const uploadFormData = new FormData();
