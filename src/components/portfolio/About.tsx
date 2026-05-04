@@ -23,6 +23,11 @@ export function About(): React.ReactElement {
   const profile = usePortfolioProfile();
   const [ref, inView] = useIntersectionObserver({ threshold: 0.15 });
 
+  // Safety check
+  if (!profile || !profile.location) {
+    return <section id="about" className="section-padding bg-[var(--bg-primary)]"><div className="container-xl mx-auto px-6 text-center text-[var(--text-secondary)]">Loading...</div></section>;
+  }
+
   const contactItems = [
     { icon: MapPin, label: profile.location },
     { icon: Mail, label: profile.email, href: `mailto:${profile.email}` },

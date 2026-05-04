@@ -45,6 +45,20 @@ export function Hero(): React.ReactElement {
   const shouldReduceMotion = useReducedMotion();
   const typewriterText = useTypewriter(TYPEWRITER_TITLES);
 
+  // Safety check: if profile is not loaded yet, show loading state
+  if (!profile || !profile.name) {
+    return (
+      <section id="hero" className="relative min-h-[100vh] pt-32 pb-0 flex flex-col justify-center overflow-hidden bg-[var(--bg-primary)]">
+        <div className="container-xl mx-auto px-6 w-full z-10 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-primary)] mx-auto"></div>
+            <p className="mt-4 text-[var(--text-secondary)]">Loading...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },

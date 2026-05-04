@@ -233,8 +233,15 @@ export const usePortfolioStore = create<PortfolioStore>()(
         try {
           const res = await fetch('/api/data');
           if (res.ok) {
-            const serverData = await res.json();
-            if (serverData && Object.keys(serverData).length > 0) {
+            let serverData = await res.json();
+            if (typeof serverData === 'string') {
+              try {
+                serverData = JSON.parse(serverData);
+              } catch (e) {
+                // ignore
+              }
+            }
+            if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
               // Force remove personal phone numbers if they were cached in the DB
               if (serverData.profile?.phone) {
                 serverData.profile.phone = serverData.profile.phone.map((p: string) => 
@@ -244,10 +251,16 @@ export const usePortfolioStore = create<PortfolioStore>()(
                 );
               }
               set({ data: serverData });
+            } else {
+              // If server returns empty, use DEFAULT_DATA
+              console.log('No data in Redis, using default data');
+              set({ data: DEFAULT_DATA });
             }
           }
         } catch (error) {
           console.error('Failed to fetch data from server', error);
+          // On error, use DEFAULT_DATA
+          set({ data: DEFAULT_DATA });
         }
       },
       publishToServer: async () => {
@@ -276,9 +289,10 @@ export const usePortfolioStore = create<PortfolioStore>()(
           state.setHydrated(true);
           // Force remove personal phone numbers from local storage cache
           setTimeout(() => {
-            const currentPhone = usePortfolioStore.getState().data.profile.phone;
-            if (currentPhone.some(p => p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669'))) {
-              usePortfolioStore.getState().updateProfile({ 
+            const currentState = usePortfolioStore.getState();
+            const currentPhone = currentState?.data?.profile?.phone;
+            if (currentPhone && currentPhone.some(p => p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669'))) {
+              currentState.updateProfile({ 
                 phone: currentPhone.map(p => 
                   p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669') ? '+91 9876543210' : p
                 )

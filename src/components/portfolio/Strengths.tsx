@@ -17,6 +17,15 @@ export function Strengths(): React.ReactElement {
   const strengths = usePortfolioStrengths();
   const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
 
+  // Safety check
+  if (!strengths || strengths.length === 0) {
+    return (
+      <section id="strengths" className="section-padding" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="container-xl text-center text-[var(--text-secondary)]">Loading...</div>
+      </section>
+    );
+  }
+
   return (
     <section id="strengths" ref={ref} className="section-padding" style={{ background: 'var(--bg-secondary)' }}>
       <div className="container-xl">

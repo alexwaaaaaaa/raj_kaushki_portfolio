@@ -35,6 +35,11 @@ export function Contact(): React.ReactElement {
     setIsSubmitting(false);
   };
 
+  // Safety check
+  if (!profile || !profile.email) {
+    return <section id="contact" className="section-padding bg-[var(--bg-primary)]"><div className="container-xl mx-auto px-6 text-center text-[var(--text-secondary)]">Loading...</div></section>;
+  }
+
   const contactItems = [
     { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
     { icon: MapPin, label: 'Location', value: profile.location },

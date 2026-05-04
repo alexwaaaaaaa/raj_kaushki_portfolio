@@ -7,6 +7,11 @@ export function Footer(): React.ReactElement {
   const profile = usePortfolioProfile();
   const currentYear = new Date().getFullYear();
 
+  // Safety check
+  if (!profile || !profile.name) {
+    return <footer style={{ borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-primary)', padding: '3rem 0' }}><div className="container-xl text-center text-[var(--text-secondary)]">Loading...</div></footer>;
+  }
+
   return (
     <footer style={{ borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-primary)', padding: '3rem 0', position: 'relative', zIndex: 10 }}>
       <div className="container-xl" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', textAlign: 'center' }}>

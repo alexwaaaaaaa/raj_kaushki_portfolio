@@ -38,6 +38,15 @@ export function Experience(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<'experience' | 'education'>('experience');
   const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
 
+  // Safety check
+  if (!experience || experience.length === 0) {
+    return (
+      <section id="experience" className="section-padding bg-[var(--bg-primary)]">
+        <div className="container-xl mx-auto px-6 text-center text-[var(--text-secondary)]">Loading...</div>
+      </section>
+    );
+  }
+
   return (
     <section id="experience" ref={ref} className="bg-[var(--bg-primary)] border-b border-[var(--border-subtle)] overflow-hidden">
       

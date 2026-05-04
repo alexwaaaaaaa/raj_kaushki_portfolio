@@ -20,6 +20,9 @@ export function Navbar(): React.ReactElement {
   const activeId = useScrollSpy(NAV_LINKS.map((l) => l.id));
   const profile = usePortfolioProfile();
 
+  // Safety check - Navbar can still render without profile
+  const hasProfile = profile && profile.name;
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
