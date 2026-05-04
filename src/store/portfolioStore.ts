@@ -8,7 +8,7 @@ const DEFAULT_DATA: PortfolioData = {
     title: 'Human Resources Manager',
     tagline: 'Building teams that build companies.',
     email: 'indrajkaushki@gmail.com',
-    phone: ['9934596801', '7838991147'],
+    phone: ['+91 9876543210'],
     location: 'Sector 63, Noida, Uttar Pradesh',
     linkedin: 'https://www.linkedin.com/in/kaushki-careerconnect-279267227/',
     summary:
@@ -235,6 +235,14 @@ export const usePortfolioStore = create<PortfolioStore>()(
           if (res.ok) {
             const serverData = await res.json();
             if (serverData && Object.keys(serverData).length > 0) {
+              // Force remove personal phone numbers if they were cached in the DB
+              if (serverData.profile?.phone) {
+                serverData.profile.phone = serverData.profile.phone.map((p: string) => 
+                  p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669') 
+                    ? '+91 9876543210' 
+                    : p
+                );
+              }
               set({ data: serverData });
             }
           }
@@ -264,7 +272,20 @@ export const usePortfolioStore = create<PortfolioStore>()(
         typeof window !== 'undefined' ? localStorage : { getItem: () => null, setItem: () => {}, removeItem: () => {} }
       ),
       onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
+        if (state) {
+          state.setHydrated(true);
+          // Force remove personal phone numbers from local storage cache
+          setTimeout(() => {
+            const currentPhone = usePortfolioStore.getState().data.profile.phone;
+            if (currentPhone.some(p => p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669'))) {
+              usePortfolioStore.getState().updateProfile({ 
+                phone: currentPhone.map(p => 
+                  p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669') ? '+91 9876543210' : p
+                )
+              });
+            }
+          }, 0);
+        }
       },
     }
   )

@@ -14,7 +14,7 @@ export function PinGate({ children }: PinGateProps): React.ReactElement {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === '9199584669') {
+    if (pin === '0000') {
       setAuthenticated(true);
     } else {
       setError('Invalid PIN');
