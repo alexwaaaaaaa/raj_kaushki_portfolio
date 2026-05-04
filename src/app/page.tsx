@@ -20,12 +20,16 @@ export default function PortfolioPage() {
   const applyToDOM = useThemeStore((s) => s.applyToDOM);
   const [mounted, setMounted] = useState(false);
 
+  const fetchFromServer = usePortfolioStore((s) => s.fetchFromServer);
+
   useEffect(() => {
     setMounted(true);
     if (isThemeHydrated) {
       applyToDOM();
     }
-  }, [isThemeHydrated, applyToDOM]);
+    // Fetch latest published data from server for visitors
+    fetchFromServer();
+  }, [isThemeHydrated, applyToDOM, fetchFromServer]);
 
   // Prevent hydration mismatch by showing nothing until Zustand stores are loaded
   if (!mounted || !isPortfolioHydrated || !isThemeHydrated) {

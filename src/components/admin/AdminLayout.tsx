@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import { 
   LayoutDashboard, UserCircle, Briefcase, Star, Award, 
   Zap, Palette, Layout, MousePointer2, Smartphone, Download,
-  PanelLeftClose, PanelLeft
+  PanelLeftClose, PanelLeft, ExternalLink as ExternalLinkIcon, CloudUpload
 } from 'lucide-react';
+import { toast } from 'sonner';
+import { usePortfolioStore } from '@/store/portfolioStore';
 import { PinGate } from './PinGate';
 import { DashboardTab } from './tabs/DashboardTab';
 import { ProfileTab } from './tabs/ProfileTab';
@@ -38,6 +40,20 @@ const TABS = [
 export function AdminLayout(): React.ReactElement {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const publishToServer = usePortfolioStore((s) => s.publishToServer);
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  const handlePublish = async () => {
+    setIsPublishing(true);
+    try {
+      await publishToServer();
+      toast.success('Successfully published changes to Live Site!');
+    } catch (error) {
+      toast.error('Failed to publish changes.');
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -95,7 +111,11 @@ export function AdminLayout(): React.ReactElement {
             })}
           </div>
 
-          <div className="p-4 border-t border-[var(--border-subtle)]">
+          <div className="p-4 border-t border-[var(--border-subtle)] flex flex-col gap-2">
+            <button onClick={handlePublish} disabled={isPublishing} className={`btn btn-primary flex items-center justify-center gap-2 ${sidebarOpen ? 'w-full' : 'p-2'}`}>
+              {isPublishing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CloudUpload size={16} />}
+              {sidebarOpen && <span>{isPublishing ? 'Publishing...' : 'Publish to Live'}</span>}
+            </button>
             <a href="/" target="_blank" rel="noopener noreferrer" className={`btn btn-outline flex items-center justify-center gap-2 ${sidebarOpen ? 'w-full' : 'p-2'}`}>
               <ExternalLinkIcon size={16} />
               {sidebarOpen && <span>View Live Site</span>}
@@ -113,14 +133,5 @@ export function AdminLayout(): React.ReactElement {
   );
 }
 
-function ExternalLinkIcon({ size }: { size: number }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-      <polyline points="15 3 21 3 21 9"></polyline>
-      <line x1="10" y1="14" x2="21" y2="3"></line>
-    </svg>
-  );
-}
 
 export default AdminLayout;

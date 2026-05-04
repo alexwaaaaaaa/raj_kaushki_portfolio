@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: Request) {
   try {
@@ -12,28 +17,28 @@ export async function POST(request: Request) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const ext = file.name.split('.').pop();
-    const filename = `${crypto.randomUUID()}.${ext}`;
     
-    // Proper path to public/uploads
-    const uploadDir = join(process.cwd(), 'public/uploads');
-    const filePath = join(uploadDir, filename);
-
-    // Write file to public/uploads
-    // NOTE: This works locally or on a standard Node.js server (VPS/EC2).
-    // If deploying to Vercel, this directory is READ-ONLY in production.
-    // In that case, you should integrate Vercel Blob or Cloudinary here.
-    await writeFile(filePath, buffer);
-
-    const fileUrl = `/uploads/${filename}`;
+    // Upload directly to Cloudinary using a stream
+    const uploadResult: any = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'portfolio_uploads' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      
+      // End stream with buffer data
+      uploadStream.end(buffer);
+    });
 
     return NextResponse.json({ 
       success: true, 
-      url: fileUrl,
-      message: 'File uploaded successfully'
+      url: uploadResult.secure_url,
+      message: 'File uploaded successfully to Cloudinary'
     });
   } catch (error) {
-    console.error('Error uploading file:', error);
-    return NextResponse.json({ error: 'Failed to upload file.' }, { status: 500 });
+    console.error('Error uploading file to Cloudinary:', error);
+    return NextResponse.json({ error: 'Failed to upload file to Cloudinary.' }, { status: 500 });
   }
 }

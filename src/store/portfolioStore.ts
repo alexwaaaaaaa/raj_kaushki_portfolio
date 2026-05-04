@@ -154,6 +154,8 @@ interface PortfolioStore {
   updateEventItem: (id: string, item: Partial<import('@/types').EventItem>) => void;
   deleteEvent: (id: string) => void;
   resetToDefaults: () => void;
+  fetchFromServer: () => Promise<void>;
+  publishToServer: () => Promise<void>;
 }
 
 export const usePortfolioStore = create<PortfolioStore>()(
@@ -227,6 +229,34 @@ export const usePortfolioStore = create<PortfolioStore>()(
           data: { ...s.data, events: (s.data.events || []).filter((e) => e.id !== id) },
         })),
       resetToDefaults: () => set({ data: DEFAULT_DATA }),
+      fetchFromServer: async () => {
+        try {
+          const res = await fetch('/api/data');
+          if (res.ok) {
+            const serverData = await res.json();
+            if (serverData && Object.keys(serverData).length > 0) {
+              set({ data: serverData });
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch data from server', error);
+        }
+      },
+      publishToServer: async () => {
+        try {
+          // get state directly
+          const state = usePortfolioStore.getState();
+          const res = await fetch('/api/data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state.data),
+          });
+          if (!res.ok) throw new Error('Failed to publish');
+        } catch (error) {
+          console.error('Failed to publish to server', error);
+          throw error; // re-throw to handle in UI
+        }
+      },
     }),
     {
       name: 'rk-portfolio-data',
