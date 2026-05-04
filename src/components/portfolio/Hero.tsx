@@ -125,14 +125,14 @@ export function Hero(): React.ReactElement {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="w-full lg:w-[45%] flex justify-center items-end relative hidden md:flex min-h-[500px]"
+          className="w-full lg:w-[45%] flex justify-center items-end relative min-h-[300px] md:min-h-[500px] mt-12 lg:mt-0"
         >
           {/* Radial Glow Background */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#5b21b6] opacity-30 blur-[120px] mix-blend-screen z-0" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full bg-[var(--color-primary)] opacity-20 blur-[90px] mix-blend-screen z-0" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] rounded-full bg-[var(--color-secondary)] opacity-30 blur-[80px] md:blur-[120px] mix-blend-screen z-0" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] md:w-[550px] h-[200px] md:h-[550px] rounded-full bg-[var(--color-primary)] opacity-20 blur-[60px] md:blur-[90px] mix-blend-screen z-0" />
           
           {/* Avatar Container (Transparent Cutout) */}
-          <div className="relative w-[550px] lg:w-[650px] flex items-end justify-center z-10">
+          <div className="relative w-full max-w-[320px] sm:max-w-[400px] md:max-w-[550px] lg:max-w-[650px] flex items-end justify-center z-10">
             {profile.avatarUrl ? (
               <img 
                 src={profile.avatarUrl} 
@@ -141,8 +141,8 @@ export function Hero(): React.ReactElement {
                 style={{ maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)' }}
               />
             ) : (
-              <div className="w-[340px] h-[340px] rounded-full flex items-center justify-center bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[0_0_60px_rgba(0,0,0,0.6)]">
-                <span className="font-display font-bold text-7xl text-[var(--color-primary)] tracking-tighter">
+              <div className="w-[280px] h-[280px] md:w-[340px] md:h-[340px] rounded-full flex items-center justify-center bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[0_0_60px_rgba(0,0,0,0.6)]">
+                <span className="font-display font-bold text-6xl md:text-7xl text-[var(--color-primary)] tracking-tighter">
                   {profile.name.split(' ').map(n => n[0]).join('')}
                 </span>
               </div>

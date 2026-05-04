@@ -83,9 +83,26 @@ export const useThemeStore = create<ThemeStore>()(
       hydrated: false,
       setHydrated: (v) => set({ hydrated: v }),
       updateColors: (colors) => {
-        set((s) => ({
-          theme: { ...s.theme, colors: { ...s.theme.colors, ...colors } },
-        }));
+        set((s) => {
+          const newColors = { ...s.theme.colors, ...colors };
+          return {
+            theme: { 
+              ...s.theme, 
+              colors: newColors,
+              scene3D: {
+                ...s.theme.scene3D,
+                ...(colors.colorPrimary ? {
+                  helixColor: colors.colorPrimary,
+                  particleColor1: colors.colorPrimary,
+                  gridColor: colors.colorPrimary,
+                } : {}),
+                ...(colors.colorSecondary ? {
+                  particleColor2: colors.colorSecondary,
+                } : {})
+              }
+            },
+          };
+        });
         applyThemeToDOM({ ...get().theme.colors, ...colors });
       },
       updateTypography: (typography) =>
@@ -101,7 +118,18 @@ export const useThemeStore = create<ThemeStore>()(
           const found = THEME_PRESETS.find((p) => p.id === preset);
           if (found) {
             set((s) => ({
-              theme: { ...s.theme, colors: found.colors, preset },
+              theme: { 
+                ...s.theme, 
+                colors: found.colors, 
+                preset,
+                scene3D: {
+                  ...s.theme.scene3D,
+                  helixColor: found.colors.colorPrimary,
+                  particleColor1: found.colors.colorPrimary,
+                  particleColor2: found.colors.colorSecondary,
+                  gridColor: found.colors.colorPrimary,
+                }
+              },
             }));
             applyThemeToDOM(found.colors);
           }

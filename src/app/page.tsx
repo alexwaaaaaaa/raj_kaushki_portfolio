@@ -34,8 +34,8 @@ export default function PortfolioPage() {
   // Prevent hydration mismatch by showing nothing until Zustand stores are loaded
   if (!mounted || !isPortfolioHydrated || !isThemeHydrated) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#0d0b14]">
-        <div className="w-12 h-12 border-4 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center bg-[var(--bg-primary)]">
+        <div className="w-12 h-12 border-4 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
