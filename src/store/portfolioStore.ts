@@ -290,8 +290,11 @@ export const usePortfolioStore = create<PortfolioStore>()(
               }
             }
             if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-
-              set({ data: serverData });
+              const mergedData = { ...DEFAULT_DATA, ...serverData };
+              if (!serverData.education || serverData.education.length === 0) {
+                mergedData.education = DEFAULT_DATA.education;
+              }
+              set({ data: mergedData });
             } else {
               // If server returns empty, use DEFAULT_DATA
               console.log('No data in Redis, using default data');
@@ -325,6 +328,16 @@ export const usePortfolioStore = create<PortfolioStore>()(
       storage: createJSONStorage(() =>
         typeof window !== 'undefined' ? localStorage : { getItem: () => null, setItem: () => {}, removeItem: () => {} }
       ),
+      merge: (persistedState: any, currentState) => {
+        const merged = { ...currentState, ...persistedState };
+        if (persistedState?.data) {
+          merged.data = { ...currentState.data, ...persistedState.data };
+          if (!persistedState.data.education || persistedState.data.education.length === 0) {
+            merged.data.education = currentState.data.education;
+          }
+        }
+        return merged as PortfolioStore;
+      },
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHydrated(true);
