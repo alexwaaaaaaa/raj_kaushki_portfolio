@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { 
-  LayoutDashboard, UserCircle, Briefcase, Star, Award, 
+  LayoutDashboard, UserCircle, Briefcase, GraduationCap, Star, Award, 
   Zap, Palette, Layout, MousePointer2, Smartphone, Download,
   PanelLeftClose, PanelLeft, ExternalLink as ExternalLinkIcon, CloudUpload
 } from 'lucide-react';
@@ -14,6 +14,7 @@ import { PinGate } from './PinGate';
 import { DashboardTab } from './tabs/DashboardTab';
 import { ProfileTab } from './tabs/ProfileTab';
 import { ExperienceTab } from './tabs/ExperienceTab';
+import { EducationTab } from './tabs/EducationTab';
 import { SkillsTab } from './tabs/SkillsTab';
 import { CertificationsTab } from './tabs/CertificationsTab';
 import { StrengthsTab } from './tabs/StrengthsTab';
@@ -28,6 +29,7 @@ const TABS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'profile', label: 'Profile', icon: UserCircle },
   { id: 'experience', label: 'Experience', icon: Briefcase },
+  { id: 'education', label: 'Education', icon: GraduationCap },
   { id: 'skills', label: 'Skills', icon: Star },
   { id: 'certifications', label: 'Certifications', icon: Award },
   { id: 'strengths', label: 'Strengths', icon: Zap },
@@ -68,6 +70,7 @@ export function AdminLayout(): React.ReactElement {
       case 'dashboard': return <DashboardTab />;
       case 'profile': return <ProfileTab />;
       case 'experience': return <ExperienceTab />;
+      case 'education': return <EducationTab />;
       case 'skills': return <SkillsTab />;
       case 'certifications': return <CertificationsTab />;
       case 'strengths': return <StrengthsTab />;

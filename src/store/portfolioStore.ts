@@ -89,6 +89,35 @@ const DEFAULT_DATA: PortfolioData = {
       ],
     },
   ],
+  education: [
+    {
+      id: 'edu1',
+      role: 'Bachelor of Technology - BTech, Computer Science',
+      company: 'Lloyd institute of engineering and technology',
+      location: '',
+      duration: '2021 – 2025',
+      type: 'Education',
+      bullets: ['Skills: Computer science Engineering, Artificial Intelligence (AI), +2 skills']
+    },
+    {
+      id: 'edu2',
+      role: 'Intermediate school. , Science(PCM)',
+      company: 'Cambridge public school patna',
+      location: '',
+      duration: 'Apr 2020 – Jul 2021',
+      type: 'Education',
+      bullets: ['Grade: 78.9%', 'Skills: Communication, Project Management, +1 skill']
+    },
+    {
+      id: 'edu3',
+      role: 'High school',
+      company: 'Krishna niketan bihar patna',
+      location: '',
+      duration: 'Apr 2018 – May 2019',
+      type: 'Education',
+      bullets: ['Grade: 90.2% (School\'s Third topper)', 'Activities and societies: Painting, Reading books, modeling', 'Skills: Event Management, Communication, +1 skill']
+    }
+  ],
   skills: [
     { id: 's1', name: 'HR Management', level: 92, category: 'Core' },
     { id: 's2', name: 'Talent Acquisition', level: 95, category: 'Core' },
@@ -140,6 +169,10 @@ interface PortfolioStore {
   addExperience: (item: ExperienceItem) => void;
   updateExperienceItem: (id: string, item: Partial<ExperienceItem>) => void;
   deleteExperience: (id: string) => void;
+  updateEducation: (edu: ExperienceItem[]) => void;
+  addEducation: (item: ExperienceItem) => void;
+  updateEducationItem: (id: string, item: Partial<ExperienceItem>) => void;
+  deleteEducation: (id: string) => void;
   updateSkills: (skills: SkillItem[]) => void;
   addSkill: (skill: SkillItem) => void;
   updateSkillItem: (id: string, item: Partial<SkillItem>) => void;
@@ -180,6 +213,21 @@ export const usePortfolioStore = create<PortfolioStore>()(
       deleteExperience: (id) =>
         set((s) => ({
           data: { ...s.data, experience: s.data.experience.filter((e) => e.id !== id) },
+        })),
+      updateEducation: (education) =>
+        set((s) => ({ data: { ...s.data, education } })),
+      addEducation: (item) =>
+        set((s) => ({ data: { ...s.data, education: [item, ...s.data.education] } })),
+      updateEducationItem: (id, item) =>
+        set((s) => ({
+          data: {
+            ...s.data,
+            education: s.data.education.map((e) => (e.id === id ? { ...e, ...item } : e)),
+          },
+        })),
+      deleteEducation: (id) =>
+        set((s) => ({
+          data: { ...s.data, education: s.data.education.filter((e) => e.id !== id) },
         })),
       updateSkills: (skills) => set((s) => ({ data: { ...s.data, skills } })),
       addSkill: (skill) =>

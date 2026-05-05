@@ -81,6 +81,7 @@ export interface PortfolioData {
   certifications: CertificationItem[];
   strengths: StrengthItem[];
   events: EventItem[];
+  education: ExperienceItem[];
 }
 
 // ── THEME TYPES ──────────────────────────────────────────────
@@ -468,6 +469,7 @@ export type AdminTab =
   | 'profile'
   | 'experience'
   | 'skills'
+  | 'education'
   | 'certifications'
   | 'strengths'
   | 'events'

@@ -26,3 +26,7 @@ export function usePortfolioCertifications() {
 export function usePortfolioStrengths() {
   return usePortfolioStore((s) => s.data.strengths);
 }
+
+export function usePortfolioEducation() {
+  return usePortfolioStore((s) => s.data.education);
+}

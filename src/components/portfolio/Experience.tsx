@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, ChevronDown, ChevronUp, Briefcase, GraduationCap } from 'lucide-react';
-import { usePortfolioExperience } from '@/hooks/usePortfolioData';
+import { usePortfolioExperience, usePortfolioEducation } from '@/hooks/usePortfolioData';
 import { useIntersectionObserver } from '@/hooks/useScrollSpy';
 
 const ACHIEVEMENTS = [
@@ -35,6 +35,7 @@ const ACHIEVEMENTS = [
 
 export function Experience(): React.ReactElement {
   const experience = usePortfolioExperience();
+  const education = usePortfolioEducation() || [];
   const [activeTab, setActiveTab] = useState<'experience' | 'education'>('experience');
   const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
 
@@ -162,26 +163,41 @@ export function Experience(): React.ReactElement {
             </div>
           ) : (
             <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-6 md:p-8 hover:border-[var(--color-primary)] transition-colors group relative overflow-hidden"
-              >
-                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                  <div>
-                    <h3 className="font-display text-2xl font-bold text-[var(--text-primary)] mb-1">MBA / BBA in Human Resources</h3>
-                    <p className="text-[var(--color-primary)] font-bold text-sm tracking-wide">University Name</p>
+              {education.map((edu, i) => (
+                <motion.div
+                  key={edu.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-6 md:p-8 hover:border-[var(--color-primary)] transition-colors group relative overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-[var(--color-primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                    <div>
+                      <h3 className="font-display text-2xl font-bold text-[var(--text-primary)] mb-1">{edu.role}</h3>
+                      <p className="text-[var(--color-primary)] font-bold text-sm tracking-wide">{edu.company}</p>
+                    </div>
+                    <div className="bg-[rgba(var(--color-primary-rgb),0.1)] text-[var(--color-primary)] px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap self-start border border-[rgba(var(--color-primary-rgb),0.2)]">
+                      {edu.duration}
+                    </div>
                   </div>
-                  <div className="bg-[rgba(var(--color-primary-rgb),0.1)] text-[var(--color-primary)] px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap self-start border border-[rgba(var(--color-primary-rgb),0.2)]">
-                    Graduation Year
-                  </div>
-                </div>
-                <p className="text-[var(--text-secondary)] leading-relaxed">
-                  Ongoing professional development and foundational studies in Human Resources Management.
-                </p>
-              </motion.div>
+                  {edu.bullets && edu.bullets.length > 0 && (
+                    <div className="text-[var(--text-secondary)] leading-relaxed space-y-1">
+                      {edu.bullets.map((b, bIdx) => {
+                        const parts = b.split(':');
+                        if (parts.length > 1) {
+                          return (
+                            <span key={bIdx} className="block">
+                              <strong>{parts[0]}:</strong> {parts.slice(1).join(':')}
+                            </span>
+                          );
+                        }
+                        return <span key={bIdx} className="block">{b}</span>;
+                      })}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
             </div>
           )}
         </div>
