@@ -8,7 +8,7 @@ const DEFAULT_DATA: PortfolioData = {
     title: 'Human Resources Manager',
     tagline: 'Building teams that build companies.',
     email: 'indrajkaushki@gmail.com',
-    phone: ['+91 9876543210'],
+    phone: [],
     location: 'Sector 63, Noida, Uttar Pradesh',
     linkedin: 'https://www.linkedin.com/in/kaushki-careerconnect-279267227/',
     summary:
@@ -242,14 +242,7 @@ export const usePortfolioStore = create<PortfolioStore>()(
               }
             }
             if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-              // Force remove personal phone numbers if they were cached in the DB
-              if (serverData.profile?.phone) {
-                serverData.profile.phone = serverData.profile.phone.map((p: string) => 
-                  p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669') 
-                    ? '+91 9876543210' 
-                    : p
-                );
-              }
+
               set({ data: serverData });
             } else {
               // If server returns empty, use DEFAULT_DATA
@@ -287,18 +280,7 @@ export const usePortfolioStore = create<PortfolioStore>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHydrated(true);
-          // Force remove personal phone numbers from local storage cache
-          setTimeout(() => {
-            const currentState = usePortfolioStore.getState();
-            const currentPhone = currentState?.data?.profile?.phone;
-            if (currentPhone && currentPhone.some(p => p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669'))) {
-              currentState.updateProfile({ 
-                phone: currentPhone.map(p => 
-                  p.includes('9934596801') || p.includes('7838991147') || p.includes('9199584669') ? '+91 9876543210' : p
-                )
-              });
-            }
-          }, 0);
+
         }
       },
     }

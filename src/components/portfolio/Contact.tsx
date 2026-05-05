@@ -43,7 +43,6 @@ export function Contact(): React.ReactElement {
   const contactItems = [
     { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
     { icon: MapPin, label: 'Location', value: profile.location },
-    { icon: Phone, label: 'Phone', value: profile.phone.join(' | '), href: `tel:${profile.phone[0]}` },
     { icon: Linkedin, label: 'LinkedIn', value: profile.linkedin, href: `https://${profile.linkedin}` },
   ];
 
@@ -112,9 +111,6 @@ export function Contact(): React.ReactElement {
               </a>
               <a href={`mailto:${profile.email}`} className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[#ea4335] hover:text-white hover:border-[#ea4335] transition-all">
                 <Mail size={20} />
-              </a>
-              <a href={`https://wa.me/91${profile.phone[0]}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all">
-                <MessageCircle size={20} />
               </a>
             </div>
           </motion.div>

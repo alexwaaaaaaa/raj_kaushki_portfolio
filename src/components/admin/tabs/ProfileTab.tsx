@@ -15,11 +15,7 @@ export function ProfileTab(): React.ReactElement {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePhoneChange = (index: number, value: string) => {
-    const newPhone = [...formData.phone];
-    newPhone[index] = value;
-    setFormData({ ...formData, phone: newPhone });
-  };
+
 
   const handleStatChange = (index: number, key: 'label' | 'value', value: string | number) => {
     const newStats = [...formData.stats];
@@ -205,12 +201,7 @@ export function ProfileTab(): React.ReactElement {
               <input type="text" name="location" value={formData.location} onChange={handleChange} className="input w-full" />
             </div>
             
-            {formData.phone.map((ph, idx) => (
-              <div key={idx}>
-                <label className="text-xs text-[var(--text-secondary)] mb-1 block">Phone {idx + 1}</label>
-                <input type="text" value={ph} onChange={(e) => handlePhoneChange(idx, e.target.value)} className="input w-full" />
-              </div>
-            ))}
+
           </div>
         </div>
 

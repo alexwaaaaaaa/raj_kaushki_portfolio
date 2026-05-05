@@ -116,6 +116,8 @@ interface EditorStore extends EditorState {
   addWidget: (bp: EditorBreakpoint, item: { type: WidgetType; label: string; w: number; h: number; x: number; y: number }) => void;
   updateLayouts: (bp: EditorBreakpoint, layout: GridLayoutItem[]) => void;
   reorderWidgets: (from: number, to: number) => void;
+  fetchFromServer: () => Promise<void>;
+  publishToServer: () => Promise<void>;
 }
 
 export const useEditorStore = create<EditorStore>()(
@@ -201,6 +203,40 @@ export const useEditorStore = create<EditorStore>()(
         const [moved] = widgets.splice(from, 1);
         widgets.splice(to, 0, moved);
         set({ widgets });
+      },
+      fetchFromServer: async () => {
+        try {
+          const res = await fetch('/api/editor');
+          if (res.ok) {
+            let serverData = await res.json();
+            if (typeof serverData === 'string') {
+              try { serverData = JSON.parse(serverData); } catch (e) {}
+            }
+            if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+              set({ 
+                widgets: serverData.widgets || DEFAULT_WIDGETS, 
+                layouts: serverData.layouts || DEFAULT_LAYOUTS 
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch editor data from server', error);
+        }
+      },
+      publishToServer: async () => {
+        try {
+          const state = useEditorStore.getState();
+          const dataToSave = { widgets: state.widgets, layouts: state.layouts };
+          const res = await fetch('/api/editor', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataToSave),
+          });
+          if (!res.ok) throw new Error('Failed to publish editor data');
+        } catch (error) {
+          console.error('Failed to publish editor data to server', error);
+          throw error;
+        }
       },
     }),
     {

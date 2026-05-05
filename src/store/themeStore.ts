@@ -68,6 +68,8 @@ interface ThemeStore {
   applyPreset: (preset: ThemePreset) => void;
   updateCursor: (cursor: Partial<CursorConfig>) => void;
   applyToDOM: () => void;
+  fetchFromServer: () => Promise<void>;
+  publishToServer: () => Promise<void>;
 }
 
 export const useThemeStore = create<ThemeStore>()(
@@ -139,6 +141,42 @@ export const useThemeStore = create<ThemeStore>()(
         set((s) => ({ cursor: { ...s.cursor, ...cursor } })),
       applyToDOM: () => {
         applyThemeToDOM(get().theme.colors);
+      },
+      fetchFromServer: async () => {
+        try {
+          const res = await fetch('/api/theme');
+          if (res.ok) {
+            let serverData = await res.json();
+            if (typeof serverData === 'string') {
+              try { serverData = JSON.parse(serverData); } catch (e) {}
+            }
+            if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
+              set({ 
+                theme: serverData.theme || get().theme, 
+                cursor: serverData.cursor || get().cursor 
+              });
+              // Apply theme to DOM after fetching
+              applyThemeToDOM(serverData.theme?.colors || get().theme.colors);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch theme data from server', error);
+        }
+      },
+      publishToServer: async () => {
+        try {
+          const state = useThemeStore.getState();
+          const dataToSave = { theme: state.theme, cursor: state.cursor };
+          const res = await fetch('/api/theme', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataToSave),
+          });
+          if (!res.ok) throw new Error('Failed to publish theme data');
+        } catch (error) {
+          console.error('Failed to publish theme data to server', error);
+          throw error;
+        }
       },
     }),
     {

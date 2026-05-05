@@ -83,7 +83,7 @@ function generateStaticHTML(data: PortfolioData): string {
     <h2>Contact</h2>
     <div class="contact">
       <p>Email: <a href="mailto:${profile.email}">${profile.email}</a></p>
-      <p>Phone: ${profile.phone.join(' | ')}</p>
+
       <p>LinkedIn: <a href="https://${profile.linkedin}" target="_blank">${profile.linkedin}</a></p>
     </div>
   </div>

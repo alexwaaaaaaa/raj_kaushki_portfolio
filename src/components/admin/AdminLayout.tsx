@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { usePortfolioStore } from '@/store/portfolioStore';
+import { useEditorStore } from '@/store/editorStore';
+import { useThemeStore } from '@/store/themeStore';
 import { PinGate } from './PinGate';
 import { DashboardTab } from './tabs/DashboardTab';
 import { ProfileTab } from './tabs/ProfileTab';
@@ -40,13 +42,19 @@ const TABS = [
 export function AdminLayout(): React.ReactElement {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const publishToServer = usePortfolioStore((s) => s.publishToServer);
+  const publishPortfolio = usePortfolioStore((s) => s.publishToServer);
+  const publishEditor = useEditorStore((s) => s.publishToServer);
+  const publishTheme = useThemeStore((s) => s.publishToServer);
   const [isPublishing, setIsPublishing] = useState(false);
 
   const handlePublish = async () => {
     setIsPublishing(true);
     try {
-      await publishToServer();
+      await Promise.all([
+        publishPortfolio(),
+        publishEditor(),
+        publishTheme(),
+      ]);
       toast.success('Successfully published changes to Live Site!');
     } catch (error) {
       toast.error('Failed to publish changes.');

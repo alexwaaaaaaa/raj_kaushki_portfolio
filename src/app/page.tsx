@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { usePortfolioStore } from '@/store/portfolioStore';
 import { useThemeStore } from '@/store/themeStore';
+import { useEditorStore } from '@/store/editorStore';
 import { Navbar } from '@/components/portfolio/Navbar';
 import { Hero } from '@/components/portfolio/Hero';
 import { About } from '@/components/portfolio/About';
@@ -20,16 +21,19 @@ export default function PortfolioPage() {
   const applyToDOM = useThemeStore((s) => s.applyToDOM);
   const [mounted, setMounted] = useState(false);
 
-  const fetchFromServer = usePortfolioStore((s) => s.fetchFromServer);
+  const fetchPortfolio = usePortfolioStore((s) => s.fetchFromServer);
+  const fetchTheme = useThemeStore((s) => s.fetchFromServer);
+  const fetchEditor = useEditorStore((s) => s.fetchFromServer);
 
   useEffect(() => {
     setMounted(true);
-    if (isThemeHydrated) {
-      applyToDOM();
-    }
     // Fetch latest published data from server for visitors
-    fetchFromServer();
-  }, [isThemeHydrated, applyToDOM, fetchFromServer]);
+    Promise.all([fetchPortfolio(), fetchTheme(), fetchEditor()]).then(() => {
+      if (isThemeHydrated) {
+        applyToDOM();
+      }
+    });
+  }, [isThemeHydrated, applyToDOM, fetchPortfolio, fetchTheme, fetchEditor]);
 
   // Prevent hydration mismatch by showing nothing until Zustand stores are loaded
   if (!mounted || !isPortfolioHydrated || !isThemeHydrated) {

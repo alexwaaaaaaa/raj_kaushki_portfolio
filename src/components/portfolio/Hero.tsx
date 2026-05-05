@@ -110,8 +110,7 @@ export function Hero(): React.ReactElement {
           <motion.div variants={itemVariants} className="flex items-center gap-4">
             {[
               { icon: Linkedin, href: profile.linkedin.startsWith('http') ? profile.linkedin : `https://${profile.linkedin}` },
-              { icon: Mail, href: `mailto:${profile.email}` },
-              { icon: Phone, href: `tel:${profile.phone[0]}` }
+              { icon: Mail, href: `mailto:${profile.email}` }
             ].map((social, i) => (
               <a key={i} href={social.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:bg-[rgba(var(--color-primary-rgb),0.05)] transition-all duration-300">
                 <social.icon size={20} />
